@@ -16,8 +16,8 @@ export class CustomValidationPipe implements PipeTransform {
     if (typeof value === 'string') {
       return value.trim(); // Удаляем пробелы по краям строки
     }
-
-    if (this.isEmpty(value)) {
+    console.log(value, metadata);
+    if (metadata.type === 'body' && this.isEmpty(value)) {
       throw new HttpException(
         'Validation failed: No body submitted',
         HttpStatus.BAD_REQUEST,
@@ -58,9 +58,13 @@ export class CustomValidationPipe implements PipeTransform {
   }
 
   isEmpty(value: any) {
-    if (Object.keys(value).length > 0) {
-      return false;
-    }
-    return true;
+      if (
+          value === null ||
+          value === undefined ||
+          Object.keys(value).length === 0
+      ) {
+          return true
+      }
+      return false
   }
 }
